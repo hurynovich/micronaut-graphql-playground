@@ -1,0 +1,99 @@
+<configuration>
+
+    <!-- Common -->
+    <logger name="io.temporal.internal.worker.Poller" level="ERROR"/>
+    <logger name="com.odxsolutions.configutils.core.service.config" level="ERROR"/>
+    <logger name="com.ondeck.security.vault.SecretVault" level="ERROR"/>
+    <!-- Micronaut -->
+    <logger name="io.micronaut.http.server.netty.RoutingInBoundHandler" level="DEBUG"/>
+    <logger name="io.micronaut" level="DEBUG"/>
+<!--    <logger name="io.micronaut.context" level="TRACE"/>-->
+    <logger name="io.micronaut.context.env" level="INFO"/>
+    <!--    <logger name="org.springframework.cloud.gateway.handler.RoutePredicateHandlerMapping" level="DEBUG"/>-->
+    <!--    <logger name="io.opentracing.contrib.spring.cloud.gateway.TraceRequestHttpHeadersFilter" level="DEBUG"/>-->
+    <!--    <logger name="org.jooq.tools.LoggerListener" level="DEBUG"/>-->
+    <!--    <logger name="com.odxsolutions.tenancy.core.auth0.Auth0TokenClientFilterBase" level="DEBUG"/>-->
+    <!--    <logger name="com.odxsolutions.decision.dmx.service.client.filter.ClientLogFilter" level="DEBUG"/>-->
+    <logger name="io.micronaut.http.client.netty.DefaultHttpClient" level="TRACE"/>
+    <!--        <logger name="io.micronaut" level="TRACE"/>-->
+    <!--Spring -->
+    <!--    <logger name="org.springframework.web.server.adapter.HttpWebHandlerAdapter" level="TRACE"/>-->
+    <logger name="com.odxsolutions.decision.gateway.filter.TenantFilter" level="DEBUG"/>
+    <logger name="org.springframework.jms.listener.DefaultMessageListenerContainer" level="INFO"/>
+    <logger name="org.springframework.cloud.gateway.handler.RoutePredicateHandlerMapping" level="DEBUG"/>
+    <logger name="org.springframework.cloud.gateway.filter.GatewayMetricsFilter" level="DEBUG"/>
+
+    <property name="TRACE" value="%magenta([%-5level])" />
+    <property name="DEBUG" value="%gray([%-5level])" />
+    <property name="INFO" value="%white([%-5level])" />
+    <property name="WARN" value="%yellow([%-5level])" />
+    <property name="ERROR" value="%red([%-5level])" />
+
+    <property name="THREAD" value="[%-7.7t]" />
+    <property name="CLASS" value="%blue(%logger{0}:%line)" />
+    <property name="MSG_PATTERN" value="${THREAD} ${CLASS} - %msg%n" />
+
+    <appender name="STDOUT_TRACE" class="ch.qos.logback.core.ConsoleAppender">
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>TRACE</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+        <encoder>
+            <pattern>${TRACE}${MSG_PATTERN}</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="STDOUT_DEBUG" class="ch.qos.logback.core.ConsoleAppender">
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>DEBUG</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+        <encoder>
+            <pattern>${DEBUG}${MSG_PATTERN}</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="STDOUT_INFO" class="ch.qos.logback.core.ConsoleAppender">
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>INFO</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+        <encoder>
+            <pattern>[%-5level]${MSG_PATTERN}</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="STDOUT_WARN" class="ch.qos.logback.core.ConsoleAppender">
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>WARN</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+        <encoder>
+            <pattern>${WARN}${MSG_PATTERN}</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="STDOUT_ERROR" class="ch.qos.logback.core.ConsoleAppender">
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>ERROR</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+        <encoder>
+            <pattern>${ERROR}${MSG_PATTERN}</pattern>
+        </encoder>
+    </appender>
+
+    <root level="INFO">
+        <appender-ref ref="STDOUT_TRACE"/>
+        <appender-ref ref="STDOUT_DEBUG"/>
+        <appender-ref ref="STDOUT_INFO"/>
+        <appender-ref ref="STDOUT_WARN"/>
+        <appender-ref ref="STDOUT_ERROR"/>
+    </root>
+
+</configuration>
