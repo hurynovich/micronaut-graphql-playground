@@ -1,0 +1,26 @@
+GRAPHQL http://localhost:8080/graphql
+
+{
+    __schema {
+        queryType {
+            fields {
+                name
+            }
+        }
+    }
+}
+
+### Get book by id
+GRAPHQL http://localhost:8080/graphql
+
+{
+    bookById (id: "book-3") {
+        name
+        author {
+            firstName
+            lastName
+        }
+        price
+    }
+}
+
