@@ -1,8 +1,8 @@
 type Query {
-    bookById(id: ID): Book # <1>
+    bookById(id: ID): Book
 }
 
-type Book { # <2>
+type Book {
     id: ID
     name: String
     pageCount: Int
@@ -10,7 +10,7 @@ type Book { # <2>
     price: Float
 }
 
-type Author { # <3>
+type Author {
     id: ID
     firstName: String
     lastName: String

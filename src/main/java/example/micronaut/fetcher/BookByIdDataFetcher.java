@@ -6,7 +6,6 @@ import graphql.schema.DataFetcher;
 import graphql.schema.DataFetchingEnvironment;
 import io.micronaut.context.annotation.Context;
 import jakarta.inject.Named;
-import jakarta.inject.Singleton;
 import lombok.AllArgsConstructor;
 
 @Context
@@ -17,7 +16,7 @@ public class BookByIdDataFetcher implements DataFetcher<Book> {
   private final DbRepository dbRepository;
 
   @Override
-  public Book get(DataFetchingEnvironment env) throws Exception {
+  public Book get(DataFetchingEnvironment env) {
     String bookId = env.getArgument("id"); // <3>
     return dbRepository.findAllBooks() // <4>
         .stream()

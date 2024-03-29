@@ -5,6 +5,9 @@ GRAPHQL http://localhost:8080/graphql
         queryType {
             fields {
                 name
+                deprecationReason
+                description
+                isDeprecated
             }
         }
     }

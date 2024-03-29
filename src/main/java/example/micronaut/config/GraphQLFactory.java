@@ -1,9 +1,8 @@
 package example.micronaut.config;
 
+import example.micronaut.graphql.annotations.AnnotatedMethodTypeWiringBuilder;
 import graphql.GraphQL;
-import graphql.scalar.GraphqlBigDecimalCoercing;
 import graphql.schema.DataFetcher;
-import graphql.schema.GraphQLScalarType;
 import graphql.schema.GraphQLSchema;
 import graphql.schema.idl.RuntimeWiring;
 import graphql.schema.idl.SchemaGenerator;
@@ -18,6 +17,7 @@ import lombok.extern.slf4j.Slf4j;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.List;
 import java.util.Optional;
 
 import static graphql.schema.idl.TypeRuntimeWiring.newTypeWiring;
@@ -30,7 +30,8 @@ public class GraphQLFactory {
   public GraphQL graphQL(
       ResourceResolver resourceResolver,
       @Named("bookByIdFetcher") DataFetcher<?> bookByIdFetcher,
-      @Named("authorFetcher") DataFetcher<?> authorFetcher
+      @Named("authorFetcher") DataFetcher<?> authorFetcher,
+      List<AnnotatedMethodTypeWiringBuilder> typeWiringBuilders
   ) {
     SchemaParser schemaParser = new SchemaParser();
 
@@ -40,24 +41,22 @@ public class GraphQLFactory {
     if (graphqlSchema.isPresent()) {
       typeRegistry.merge(schemaParser.parse(new BufferedReader(new InputStreamReader(graphqlSchema.get()))));
 
-      RuntimeWiring runtimeWiring = RuntimeWiring.newRuntimeWiring()
+      RuntimeWiring.Builder runtimeWiringBuilder = RuntimeWiring.newRuntimeWiring()
           .type(
-              newTypeWiring("Query").dataFetcher("bookById", bookByIdFetcher)
+              newTypeWiring("Query")
+                  .dataFetcher("bookById", bookByIdFetcher)
           )
           .type(
-              newTypeWiring("Book").dataFetcher("author", authorFetcher)
-          )
-          .scalar(
-              GraphQLScalarType.newScalar()
-                  .name("Float")
-                  .description("BigDecimal implementation")
-                  .coercing(new GraphqlBigDecimalCoercing())
-                  .build()
-          )
-          .build();
+              newTypeWiring("Book")
+                  .dataFetcher("author", authorFetcher)
+          );
+
+      typeWiringBuilders.stream()
+          .flatMap(twb -> twb.getTypeWirings().stream())
+          .forEach(tw -> runtimeWiringBuilder.type(tw));
 
       SchemaGenerator schemaGenerator = new SchemaGenerator();
-      GraphQLSchema graphQLSchema = schemaGenerator.makeExecutableSchema(typeRegistry, runtimeWiring); // <8>
+      GraphQLSchema graphQLSchema = schemaGenerator.makeExecutableSchema(typeRegistry, runtimeWiringBuilder.build()); // <8>
 
       return GraphQL.newGraphQL(graphQLSchema).build(); // <9>
 
