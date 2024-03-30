@@ -1,3 +1,4 @@
+### Get shema
 GRAPHQL http://localhost:8080/graphql
 
 {
@@ -24,6 +25,17 @@ GRAPHQL http://localhost:8080/graphql
             lastName
         }
         price
+    }
+}
+
+
+### Generate fake author
+GRAPHQL http://localhost:8080/graphql
+
+{
+    generateFakeAuthor {
+        firstName
+        lastName
     }
 }
 

@@ -18,5 +18,5 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 @Executable
 @Bean
 @DefaultScope(Singleton.class)
-public @interface GraphqlController {
+public @interface GraphqlWiring {
 }

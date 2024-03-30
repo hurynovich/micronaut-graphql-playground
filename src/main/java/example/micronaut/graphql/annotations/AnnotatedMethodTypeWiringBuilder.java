@@ -11,7 +11,6 @@ import io.micronaut.core.type.Argument;
 import io.micronaut.inject.BeanDefinition;
 import io.micronaut.inject.ExecutableMethod;
 import io.micronaut.inject.MethodExecutionHandle;
-import jakarta.inject.Named;
 import lombok.AllArgsConstructor;
 
 import javax.validation.ConstraintViolationException;
@@ -20,30 +19,38 @@ import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
+import static java.util.function.Predicate.not;
+
 @Context
 @AllArgsConstructor
-public class AnnotatedMethodTypeWiringBuilder implements ExecutableMethodProcessor<GraphqlController> {
+public class AnnotatedMethodTypeWiringBuilder implements ExecutableMethodProcessor<GraphqlWiring> {
   private final ExecutionHandleLocator executionHandleLocator;
   private final List<TypeRuntimeWiring> typeWirings = new LinkedList<>();
 
   @Override
   public void process(BeanDefinition<?> beanDefinition, ExecutableMethod<?, ?> method) {
-    Optional<AnnotationValue<Fetcher>> fetcherMetaOpt = method.findAnnotation(Fetcher.class);
-    if (fetcherMetaOpt.isEmpty()) {
+    List<AnnotationValue<Fetcher>> fetcherAnnotations = method.getAnnotationValuesByType(Fetcher.class);
+    if (fetcherAnnotations.isEmpty()) {
       return;
     }
-    AnnotationValue<Fetcher> fetcherAnnotation = fetcherMetaOpt.get();
-    String graphqlTypeName = fetcherAnnotation.stringValue("type").orElseThrow();
-    String graphqlFieldName = fetcherAnnotation.stringValue("field").orElseThrow();
 
-    MethodExecutionHandle<?, Object> handle =
-        executionHandleLocator.createExecutionHandle(beanDefinition, (ExecutableMethod<Object, ?>) method);
+    for (var fetcherAnnotation : fetcherAnnotations) {
+      String graphqlTypeName = fetcherAnnotation.stringValue("type").filter(not(String::isBlank)).orElseThrow(
+          //TODO: add clear exception
+      );
+      String graphqlFieldName = fetcherAnnotation.stringValue("field").filter(not(String::isBlank)).orElseThrow(
+          //TODO: add clear exception
+      );
 
-    typeWirings.add(
-        TypeRuntimeWiring.newTypeWiring(graphqlTypeName)
-            .dataFetcher(graphqlFieldName, createDataFetcher(handle))
-            .build()
-    );
+      MethodExecutionHandle<?, Object> handle =
+          executionHandleLocator.createExecutionHandle(beanDefinition, (ExecutableMethod<Object, ?>) method);
+
+      typeWirings.add(
+          TypeRuntimeWiring.newTypeWiring(graphqlTypeName)
+              .dataFetcher(graphqlFieldName, createDataFetcher(handle))
+              .build()
+      );
+    }
   }
 
   public List<TypeRuntimeWiring> getTypeWirings() {

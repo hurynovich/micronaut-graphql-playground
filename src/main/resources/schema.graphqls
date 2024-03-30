@@ -1,5 +1,11 @@
 type Query {
     bookById(id: ID): Book
+    generateFakeAuthor: FakeAuthor!
+}
+
+type FakeAuthor {
+    firstName (min: Int = 3, max: Int = 8) : String!
+    lastName (min: Int = 4, max: Int = 16): String!
 }
 
 type Book {
@@ -12,6 +18,6 @@ type Book {
 
 type Author {
     id: ID
-    firstName (min: Int = 3, max: Int = 64) : String
-    lastName: String
+    firstName : String!
+    lastName: String!
 }
