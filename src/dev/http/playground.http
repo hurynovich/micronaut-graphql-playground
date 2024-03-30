@@ -20,7 +20,7 @@ GRAPHQL http://localhost:8080/graphql
     bookById (id: "book-3") {
         name
         author {
-            firstName
+            firstName (min: 3, max: 10)
             lastName
         }
         price

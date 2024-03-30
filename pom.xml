@@ -16,8 +16,8 @@
         <packaging>jar</packaging>
         <exec.mainClass>example.micronaut.Application</exec.mainClass>
 
-        <jdk.version>11</jdk.version>
-        <release.version>11</release.version>
+        <jdk.version>17</jdk.version>
+        <release.version>17</release.version>
         <micronaut.version>3.9.2</micronaut.version>
         <micronaut.runtime>netty</micronaut.runtime>
         <lombok.version>1.18.32</lombok.version>
@@ -44,6 +44,11 @@
         <dependency>
             <groupId>io.micronaut</groupId>
             <artifactId>micronaut-jackson-databind</artifactId>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.micronaut</groupId>
+            <artifactId>micronaut-validation</artifactId>
             <scope>compile</scope>
         </dependency>
 
@@ -119,7 +124,7 @@
                         </path>
                         <path>
                             <groupId>io.micronaut</groupId>
-                            <artifactId>micronaut-http-validation</artifactId>
+                            <artifactId>micronaut-validation-processor</artifactId>
                             <version>${micronaut.version}</version>
                         </path>
                     </annotationProcessorPaths>

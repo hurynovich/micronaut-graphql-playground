@@ -12,6 +12,6 @@ type Book {
 
 type Author {
     id: ID
-    firstName: String
+    firstName (min: Int = 3, max: Int = 64) : String
     lastName: String
 }
